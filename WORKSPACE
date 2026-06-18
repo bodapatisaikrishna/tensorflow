@@ -30,6 +30,25 @@ tf_http_archive(
     ),
 )
 
+# Initialize hermetic C++
+tf_http_archive(
+    name = "rules_ml_toolchain",
+    sha256 = "f8fff5473d82ae7c5e6896fe7deee8b35ac61e21a4f49788b13c35ed2ddda98e",
+    strip_prefix = "rules_ml_toolchain-98bf02f9c4395d8e9b080154b4bcb196a4fc8058",
+    urls = tf_mirror_urls(
+        "https://github.com/yuriivcs/rules_ml_toolchain/archive/98bf02f9c4395d8e9b080154b4bcb196a4fc8058.tar.gz",
+    ),
+)
+
+tf_http_archive(
+    name = "xla",
+    sha256 = "f382bc511274ae891ee3f85998609b488b47ee85b39a280ccae01b3a64cbf451",
+    strip_prefix = "xla-afe23a1c746c7947dbb2de0065117815b1804bf1",
+    urls = tf_mirror_urls(
+        "https://github.com/openxla/xla/archive/afe23a1c746c7947dbb2de0065117815b1804bf1.tar.gz",
+    ),
+)
+
 # Initialize the TensorFlow repository and all dependencies.
 #
 # The cascade of load() statements and tf_workspace?() calls works around the
@@ -54,13 +73,14 @@ rules_shell_dependencies()
 
 rules_shell_toolchains()
 
-# Initialize hermetic C++
 load(
     "@rules_ml_toolchain//cc/deps:cc_toolchain_deps.bzl",
     "cc_toolchain_deps",
 )
 
 cc_toolchain_deps()
+
+register_toolchains("@rules_ml_toolchain//cc:darwin_aarch64_darwin_aarch64")
 
 register_toolchains("@rules_ml_toolchain//cc:linux_x86_64_linux_x86_64")
 
@@ -69,6 +89,8 @@ register_toolchains("@rules_ml_toolchain//cc:linux_x86_64_linux_x86_64_cuda")
 register_toolchains("@rules_ml_toolchain//cc:linux_aarch64_linux_aarch64")
 
 register_toolchains("@rules_ml_toolchain//cc:linux_aarch64_linux_aarch64_cuda")
+
+register_toolchains("@rules_ml_toolchain//cc:linux_x86_64_darwin_aarch64")
 
 # Initialize hermetic Python
 load("@xla//third_party/py:python_init_rules.bzl", "python_init_rules")
