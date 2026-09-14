@@ -3319,4 +3319,15 @@ diff --ruN a/stablehlo/stablehlo/tests/transforms/stablehlo_refine_shapes.mlir b
      %2 = stablehlo.dynamic_iota %1, dim = 0 : (tensor<1xi64>) -> tensor<?xi32>
      return %2 : tensor<?xi32>
    }
+diff --ruN a/stablehlo/stablehlo/transforms/optimization/StablehloAggressiveSimplification.cpp b/stablehlo/stablehlo/transforms/optimization/StablehloAggressiveSimplification.cpp
+--- stablehlo/stablehlo/transforms/optimization/StablehloAggressiveSimplification.cpp
++++ stablehlo/stablehlo/transforms/optimization/StablehloAggressiveSimplification.cpp
+@@ -1716,6 +1716,7 @@
+ void populateStablehloHloImportCanonicalizationPatterns(
+     MLIRContext* context, RewritePatternSet* patterns,
+     const StablehloAggressiveSimplificationPassOptions& options) {
++  patterns->add<ConcatenateOpNoop, ConcatenateOpRemoveEmpty>(context, options);
+   patterns->add<ReshapeOp_RemoveNoop, GetTupleElementOp_UnpackTuple>(context);
+   patterns->add<TupleIsRepacking, WhileOpImplicitCapture>(context, options);
+ }
 
